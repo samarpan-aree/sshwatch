@@ -1,0 +1,51 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: test (python ${{ matrix.python-version }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.9", "3.10", "3.11", "3.12"]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e ".[dev]"
+
+      - name: Run tests
+        run: pytest -q
+
+      - name: End-to-end CLI against the demo log
+        run: |
+          set -euo pipefail
+          # The demo log contains a compromise, so a critical gate must exit 1.
+          if sshwatch demo/auth.log --fail-on critical --quiet; then
+            echo "expected exit 1 from a log containing a compromise"
+            exit 1
+          fi
+          echo "gate correctly blocked"
+
+          sshwatch demo/auth.log -f sarif -o ssh.sarif
+          python -c "import json; d=json.load(open('ssh.sarif')); assert d['version']=='2.1.0'; assert d['runs'][0]['results']"
+
+      - name: Byte-compile every module
+        run: python -m compileall -q sshwatch tests
