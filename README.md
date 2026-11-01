@@ -2,7 +2,8 @@
 
 **Turns an SSH auth log into three sentences you can act on — and tells you which account is already compromised.**
 
-[![Python](https://img.shields.io/badge/python-3.9%20%7C%203.10%20%7C%203.11%20%7C%203.12-blue)](https://www.python.org/)
+[![CI](https://github.com/samarpan-aree/sshwatch/actions/workflows/ci.yml/badge.svg)](https://github.com/samarpan-aree/sshwatch/actions/workflows/ci.yml)
+[![Python](https://img.shields.io/badge/python-3.10%20%7C%203.11%20%7C%203.12-blue)](https://www.python.org/)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![Tests](https://img.shields.io/badge/tests-99%20passing-brightgreen)](tests/)
 [![Dependencies](https://img.shields.io/badge/dependencies-zero-success)](pyproject.toml)
@@ -74,8 +75,9 @@ instruction.
 pip install git+https://github.com/samarpan-aree/sshwatch.git
 ```
 
-Zero runtime dependencies — standard library only. A security tool you drop onto
-a locked-down host should not drag in a tree you then have to audit.
+Python 3.10+. Zero runtime dependencies — standard library only. A security tool
+you drop onto a locked-down host should not drag in a tree you then have to
+audit.
 
 ## Usage
 
